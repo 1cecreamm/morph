@@ -29,7 +29,7 @@ CORES=$(grep -c ^processor /proc/cpuinfo)
 THREAD="-j$CORES"
 
 # Export
-export FILENAME="Morph-Limited-MIUI-EAS-GCC11-$(date "+%Y%m%d-%H%M").zip"
+export FILENAME="Morph-Limited-EAS-GCC11-$(date "+%Y%m%d-%H%M").zip"
 export KERNEL_USE_CCACHE=1
 export ARCH=arm64
 export SUBARCH=arm64
@@ -69,10 +69,10 @@ fi
 [[ -z ${ZIP_DIR} ]] && { exit; }
 
 # Compress to zip file
-cp out/arch/arm64/boot/Image.gz-dtb /home/rudy/kernel/miui/AnyKernel3
-    cd /home/rudy/kernel/miui/AnyKernel3
+cp out/arch/arm64/boot/Image.gz-dtb /home/rudy/kernel/eas/AnyKernel3
+    cd /home/rudy/kernel/eas/AnyKernel3
     zip -r9 $FILENAME *
-    cd /home/rudy/kernel/miui/AnyKernel3
+    cd /home/rudy/kernel/eas/AnyKernel3
 BUILD_END=$(date +"%s")
 DIFF=$(($BUILD_END - $BUILD_START))
 curl -s -X POST "https://api.telegram.org/bot883795091:AAHn3EvMjZl7abdMYH1C2hbY04t7XBq09uw/sendMessage" \
@@ -90,12 +90,12 @@ M          M     MM    M     M M         M   M
 =================================
 Android: 10/11
 Compiler: GCC 11.x
-Version: MIUI-EAS
+Version: EAS
 Device: Platina ( MI 8 LITE )
 Kernel: 4.4.x
 Status: Stable"
-curl -F caption="✅Build completed in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds" -F document=@"/home/rudy/kernel/miui/AnyKernel3/$FILENAME" https://api.telegram.org/bot883795091:AAHn3EvMjZl7abdMYH1C2hbY04t7XBq09uw/sendDocument?chat_id=-1001304512334
-    rm -rf /home/rudy/kernel/miui/AnyKernel3/Image.gz-dtb
-    rm -rf /home/rudy/kernel/miui/AnyKernel3/$FILENAME
-    rm -rf /home/rudy/kernel/miui/out
+curl -F caption="✅Build completed in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds" -F document=@"/home/rudy/kernel/eas/AnyKernel3/$FILENAME" https://api.telegram.org/bot883795091:AAHn3EvMjZl7abdMYH1C2hbY04t7XBq09uw/sendDocument?chat_id=-1001304512334
+    rm -rf /home/rudy/kernel/eas/AnyKernel3/Image.gz-dtb
+    rm -rf /home/rudy/kernel/eas/AnyKernel3/$FILENAME
+    rm -rf /home/rudy/kernel/eas/out
 echo -e "The build is complete, and is in the directory AnyKernel3"
