@@ -4,10 +4,10 @@
 # Simple Local Kernel Build Script
 
 # Clone gcc10
-if ! [ -d "$PWD/gcc10" ]; then
-    git clone https://github.com/1cecreamm/aarch64-raph-linux-android.git -b elf --depth=1 gcc10
+if ! [ -d "$PWD/gcc11" ]; then
+    git clone https://github.com/mvaisakh/gcc-arm64.git -b gcc-master --depth=1 gcc11
 else
-    echo "gcc10 folder is exist, not cloning"
+    echo "gcc11 folder is exist, not cloning"
 fi
 
 # Clone AnyKernel3
@@ -29,12 +29,12 @@ CORES=$(grep -c ^processor /proc/cpuinfo)
 THREAD="-j$CORES"
 
 # Export
-export FILENAME="Morph-Limited-EAS-GCC10-$(date "+%Y%m%d-%H%M").zip"
+export FILENAME="Morph-Limited-MIUI-EAS-GCC11-$(date "+%Y%m%d-%H%M").zip"
 export KERNEL_USE_CCACHE=1
 export ARCH=arm64
 export SUBARCH=arm64
 export CROSS_COMPILE
-export CROSS_COMPILE="$KERNEL_DIR/gcc10/bin/aarch64-raphiel-elf-"
+export CROSS_COMPILE="$KERNEL_DIR/gcc11/bin/aarch64-elf-"
 export KBUILD_BUILD_USER="1cecreamm"
 export KBUILD_BUILD_HOST="hisokadevv"
 
@@ -69,10 +69,10 @@ fi
 [[ -z ${ZIP_DIR} ]] && { exit; }
 
 # Compress to zip file
-cp out/arch/arm64/boot/Image.gz-dtb /home/rudy/kernel/eas/AnyKernel3
-    cd /home/rudy/kernel/eas/AnyKernel3
+cp out/arch/arm64/boot/Image.gz-dtb /home/rudy/kernel/miui/AnyKernel3
+    cd /home/rudy/kernel/miui/AnyKernel3
     zip -r9 $FILENAME *
-    cd /home/rudy/kernel/eas/AnyKernel3
+    cd /home/rudy/kernel/miui/AnyKernel3
 BUILD_END=$(date +"%s")
 DIFF=$(($BUILD_END - $BUILD_START))
 curl -s -X POST "https://api.telegram.org/bot883795091:AAHn3EvMjZl7abdMYH1C2hbY04t7XBq09uw/sendMessage" \
@@ -88,14 +88,14 @@ M   M    M   M    M  MMM  MMM  MMM
 M          M     MM    M     M M         M   M
 
 =================================
-Android: 10
-Compiler: GCC 10.x
-Version: EAS
+Android: 10/11
+Compiler: GCC 11.x
+Version: MIUI-EAS
 Device: Platina ( MI 8 LITE )
 Kernel: 4.4.x
 Status: Stable"
-curl -F caption="✅Build completed in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds" -F document=@"/home/rudy/kernel/eas/AnyKernel3/$FILENAME" https://api.telegram.org/bot883795091:AAHn3EvMjZl7abdMYH1C2hbY04t7XBq09uw/sendDocument?chat_id=-1001304512334
-    rm -rf /home/rudy/kernel/eas/AnyKernel3/Image.gz-dtb
-    rm -rf /home/rudy/kernel/eas/AnyKernel3/$FILENAME
-    rm -rf /home/rudy/kernel/eas/out
+curl -F caption="✅Build completed in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds" -F document=@"/home/rudy/kernel/miui/AnyKernel3/$FILENAME" https://api.telegram.org/bot883795091:AAHn3EvMjZl7abdMYH1C2hbY04t7XBq09uw/sendDocument?chat_id=-1001304512334
+    rm -rf /home/rudy/kernel/miui/AnyKernel3/Image.gz-dtb
+    rm -rf /home/rudy/kernel/miui/AnyKernel3/$FILENAME
+    rm -rf /home/rudy/kernel/miui/out
 echo -e "The build is complete, and is in the directory AnyKernel3"
